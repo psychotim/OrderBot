@@ -1,9 +1,14 @@
 from aiogram import types
 
-kblist = [
-    [types.KeyboardButton(text="Отмена")]
-]
-cancel_buttons = types.ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=kblist,
-    input_field_placeholder="Выберите действие"
-)
+
+def cancel_kb() -> types.ReplyKeyboardMarkup:
+    btn_list = [
+        [types.KeyboardButton(text="Отмена")]
+    ]
+    cancel_button = types.ReplyKeyboardMarkup(
+        resize_keyboard=True,
+        keyboard=btn_list,
+        input_field_placeholder="Выберите действие"
+    )
+
+    return cancel_button

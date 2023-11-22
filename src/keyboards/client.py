@@ -18,7 +18,8 @@ kb_list = [
 ]
 
 start_buttons = types.ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=kb_list,
+    resize_keyboard=True,
+    keyboard=kb_list,
     input_field_placeholder="Выберите действие"
 )
 
@@ -34,7 +35,8 @@ kb_list = [
 ]
 
 service_buttons = types.ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=kb_list,
+    resize_keyboard=True,
+    keyboard=kb_list,
     input_field_placeholder="Выберите действие"
 )
 
@@ -44,14 +46,15 @@ kblist = [
 ]
 
 price_buttons = types.ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=kblist,
+    resize_keyboard=True,
+    keyboard=kblist,
     input_field_placeholder="Выберите действие"
 )
 
 
 def get_admin_dates_ikb(data):
     dates_ik = InlineKeyboardBuilder()
-    for i in map(lambda x: str(x[0]), data):
+    for i in map(lambda x: str(x[1]), data):
         dates_ik.row(types.InlineKeyboardButton(
             text=i,
             callback_data=client_cb(data_id=i, action="date_client").pack())

@@ -15,7 +15,8 @@ kb_admin_main = [
     [types.KeyboardButton(text='Админ-панель')]
 ]
 start_admin_buttons = types.ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=kb_admin_main,
+    resize_keyboard=True,
+    keyboard=kb_admin_main,
     input_field_placeholder='Выберите действие'
 )
 
@@ -26,24 +27,30 @@ kb_admin_panel = [
     [types.KeyboardButton(text='Главное меню')]
 ]
 admin_buttons = types.ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=kb_admin_panel,
+    resize_keyboard=True,
+    keyboard=kb_admin_panel,
     input_field_placeholder='Выберите действие'
 )
 
 
 def get_edit_ikb(user_id: int) -> types.InlineKeyboardMarkup:
     ikb = InlineKeyboardBuilder()
-    ikb.button(text='Удалить запись',
-               callback_data=user_cb(data_id=f"{user_id}", action="delete_reg"))
+    ikb.button(
+        text='Удалить запись',
+        callback_data=user_cb(data_id=f"{user_id}", action="delete_reg")
+    )
     ikb.adjust(1)
     return ikb.as_markup()
 
 
 def get_dates_ikb(data: list) -> types.InlineKeyboardMarkup:
     ikb = InlineKeyboardBuilder()
-    for i in map(lambda x: str(x[0]), data):
-        ikb.button(text=f"{i} ❌",
-                   callback_data=user_cb(data_id=i, action="delete_date")
-                   )
+    for i in data:
+        ikb.button(
+            text=f"{i[1]} ❌",
+            callback_data=user_cb(data_id=str(i[0]), action="delete_date").pack()
+        )
     ikb.adjust(1)
     return ikb.as_markup()
+
+# map(lambda x: str(x[0]), data)

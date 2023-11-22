@@ -4,9 +4,14 @@ import asyncio
 from aiogram import Dispatcher, Bot
 from aiogram.fsm.storage.memory import MemoryStorage
 from dotenv import load_dotenv
-import src.utils.database as db
-from src.handlers import router
+from src.routers import router
 import logging
+from src.db.queries.orm import AsyncORM
+
+
+async def main_db():
+    await AsyncORM.create_tables()
+    # await AsyncORM.get_admin_date()
 
 
 async def main() -> None:
@@ -15,9 +20,10 @@ async def main() -> None:
     dp = Dispatcher(storage=MemoryStorage())
     bot = Bot(token=os.getenv('TOKEN'))
 
-    dp.include_router(router)
+    dp.include_routers(router)
 
-    await db.db_start()
+    # asyncio.run(syncORM.create_tables())
+    await main_db()
     await dp.start_polling(bot)
     await asyncio.sleep(0)
 
