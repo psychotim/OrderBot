@@ -1,5 +1,5 @@
-from sqlalchemy import create_engine, String
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy import String
+from sqlalchemy.orm import DeclarativeBase
 from src.db.config import settings
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from typing import Annotated

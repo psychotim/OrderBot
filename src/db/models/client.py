@@ -1,22 +1,5 @@
-import datetime
-import enum
 from typing import Annotated, Optional
-
-from sqlalchemy import (
-    TIMESTAMP,
-    CheckConstraint,
-    Column,
-    Enum,
-    ForeignKey,
-    Index,
-    Integer,
-    MetaData,
-    PrimaryKeyConstraint,
-    String,
-    Table,
-    text,
-)
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from src.db.database import Base, str_256
 
 

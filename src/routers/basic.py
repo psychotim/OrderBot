@@ -1,15 +1,10 @@
 import os
 
 from aiogram.filters import CommandStart, Command
-from aiogram.fsm.context import FSMContext
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-
-from src.db.queries.orm import AsyncORM as db
 from aiogram import types, Router, F
 from src.keyboards.admin import (
     start_admin_buttons,
     admin_buttons,
-    user_cb,
     get_dates_ikb
 )
 from src.keyboards.basic import cancel_kb

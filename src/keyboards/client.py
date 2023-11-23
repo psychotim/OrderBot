@@ -2,8 +2,6 @@ from aiogram import types
 from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from src.keyboards.admin import user_cb
-
 
 class client_cb(CallbackData, sep="__", prefix="my"):
     data_id: str

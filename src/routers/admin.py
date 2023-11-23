@@ -1,6 +1,5 @@
 import os
-from aiogram import types, Router, F, Bot
-from aiogram.filters import Command, CommandObject
+from aiogram import types, Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery

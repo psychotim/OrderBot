@@ -1,9 +1,8 @@
-from sqlalchemy import Integer, and_, cast, func, insert, inspect, or_, select, text, delete
-from sqlalchemy.orm import aliased, contains_eager, joinedload, selectinload
+from sqlalchemy import insert, select, delete
 from aiogram.fsm.context import FSMContext
 
 from src.db.database import Base, async_engine, async_session_factory
-from src.db.models.client import AccountsData, Dates, AdminsData
+from src.db.models.client import AccountsData, Dates
 
 
 class AsyncORM:
@@ -39,7 +38,6 @@ class AsyncORM:
 
             res = await session.execute(get_dates)
             res_date = res.all()
-            # print(f'{res_date=}')
             return res_date
 
     @staticmethod
@@ -55,7 +53,6 @@ class AsyncORM:
     async def get_all_dates():
         async with async_session_factory as session:
             get_dates = select(Dates).union_all()
-
             res = await session.execute(get_dates)
             res_date = res.all()
             return res_date
