@@ -4,36 +4,22 @@ import aiogram.exceptions
 from aiogram import types, F, Router, Bot
 import telegram.error
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import CallbackQuery
 
-from src.keyboards.admin import admin_buttons
-from src.keyboards.basic import cancel_kb
-from .basic import show_all_dates
+from src.routers.client_logic.fsm.order_states import NewOrder
+from src.keyboards.admin_kb.admin import admin_btn
+from src.keyboards.basic_kb import cancel_kb
 
-from src.keyboards.client import (
-    price_buttons,
+from src.keyboards.client_kb.client import (
+    price_btn,
     get_admin_dates_ikb,
-    service_buttons,
-    start_buttons,
-    client_cb
+    service_btn,
+    start_client_btn,
+    ClientCB
 )
 from src.db.queries.orm import AsyncORM as db
 
-
-class NewOrder(StatesGroup):
-    service = State()
-    name = State()
-    surname = State()
-    date_client = State()
-    phone = State()
-
-
-class NewDate(StatesGroup):
-    date_admin = State()
-
-
-client_router = Router()
+client_router = Router(name='client_logic')
 
 
 @client_router.message(F.text == "Отмена")
@@ -42,44 +28,14 @@ async def cmd_panel(message: types.Message, state: FSMContext) -> None:
         await state.clear()
         await message.answer(
             'Вы вернулись обратно',
-            reply_markup=admin_buttons
+            reply_markup=admin_btn()
         )
     else:
         await state.clear()
         await message.answer(
             'Вы вернулись обратно',
-            reply_markup=start_buttons
+            reply_markup=start_client_btn()
         )
-
-
-@client_router.message(F.text == "Доступные даты")
-async def cmd_show_all_dates(message: types.Message) -> None:
-    dates = await db.get_admin_date()
-    sudo_id = int(os.getenv('SUDO_ID'))
-    if not dates:
-        await message.answer(
-            'На данный момент нет доступных дат',
-            reply_markup=cancel_kb()
-        )
-    else:
-        await show_all_dates(message, dates)
-
-    if message.from_user.id != sudo_id:
-        if not dates:
-            await message.answer(
-                'На данный момент нет доступных дат',
-                reply_markup=cancel_kb()
-            )
-        else:
-            await message.answer(
-                'Уважаемый клиент, если ни одна из предложенных дат вам не подходит,'
-                ' мы предлагаем связаться с мастером и договориться о'
-                ' более удобной для вас дате'
-                ' и времени.\n'
-                f'<i> Спасибо за понимание! </i>',
-                parse_mode='HTML',
-                reply_markup=price_buttons
-            )
 
 
 @client_router.message(F.text == 'Услуги')
@@ -117,7 +73,8 @@ async def cmd_services(message: types.Message) -> None:
     price6 = '8 рублей'
     service6 = 'Ваксинг верхней губы'
     text6 = f'Услуга: {service6}\n Цена услуги: <b>{price6}</b>'
-    await message.answer(text6, parse_mode='HTML', reply_markup=price_buttons)
+
+    await message.answer(text6, parse_mode='HTML', reply_markup=price_btn())
 
 
 @client_router.message(F.text == "Записаться")
@@ -125,7 +82,7 @@ async def cmd_add_service(message: types.Message, state: FSMContext) -> None:
     await state.set_state(NewOrder.service)
     await message.answer(
         'Выберите услугу:',
-        reply_markup=service_buttons
+        reply_markup=service_btn()
     )
 
 
@@ -165,8 +122,11 @@ async def surname_handler(message: types.Message, state: FSMContext) -> None:
         )
 
 
-@client_router.callback_query(NewOrder.date_client, client_cb.filter(F.action == "date_client"))
-async def date_select_handler(query: CallbackQuery, callback_data: client_cb, state: FSMContext) -> None:
+@client_router.callback_query(
+    NewOrder.date_client,
+    ClientCB.filter(F.action == "date_client")
+)
+async def date_select_handler(query: CallbackQuery, callback_data: ClientCB, state: FSMContext) -> None:
     date_client = callback_data.data_id
     await state.update_data(date_client=date_client)
     await query.answer()
@@ -187,12 +147,12 @@ async def add_service(message: types.Message, state: FSMContext, bot: Bot) -> No
             'Вы записаны, как только мастер будет свободен, он с вами свяжется!\n'
             'Возникли вопросы?\n'
             ' Напишите мастеру --> @verasok83',
-            reply_markup=start_buttons
+            reply_markup=start_client_btn()
         )
     else:
         await message.answer(
             'Вы на главном меню',
-            reply_markup=admin_buttons
+            reply_markup=admin_btn()
         )
 
     await db.add_item(state)

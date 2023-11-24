@@ -2,17 +2,17 @@ import os
 import asyncio
 
 from aiogram import Dispatcher, Bot
-from aiogram.fsm.storage.redis import RedisStorage
 from aiogram.fsm.storage.memory import MemoryStorage
 from dotenv import load_dotenv
 from src.routers import router
 import logging
 from src.db.queries.orm import AsyncORM
-from aioredis import Redis
+# from aioredis import Redis
+# from aiogram.fsm.storage.redis import RedisStorage
 
 
-async def main_db():
-    await AsyncORM.create_tables()
+# async def main_db():
+#     await AsyncORM.create_tables()
 
 
 async def main() -> None:
@@ -23,7 +23,7 @@ async def main() -> None:
 
     dp.include_routers(router)
 
-    await main_db()
+    await AsyncORM.create_tables()
     await dp.start_polling(bot)
     await asyncio.sleep(0)
 

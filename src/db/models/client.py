@@ -1,4 +1,4 @@
-from typing import Annotated, Optional
+from typing import Annotated
 from sqlalchemy.orm import Mapped, mapped_column
 from src.db.database import Base, str_256
 
@@ -32,15 +32,17 @@ class Dates(Base):
     date_admin: Mapped[str_256]
 
 
+""" This table for the future features
+
 class AdminsData(Base):
     __tablename__ = "admins"
 
-    """ Variables
+    Variables
 
     :param id: primary key
     :param user_id: Telegram user_id
-    """
+    
 
     id: Mapped[Annotated[int, mapped_column(primary_key=True)]]
     user_id: Mapped[Annotated[int, mapped_column(unique=True)]]
-
+"""

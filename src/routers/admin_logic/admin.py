@@ -1,36 +1,31 @@
 import os
+
 from aiogram import types, Router, F
 from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
+from src.routers.client_logic.fsm.date_states import NewDate
 from aiogram.types import CallbackQuery
 
 from src.db.queries.orm import AsyncORM as db
-from src.keyboards.admin import (
+from src.keyboards.basic_kb import cancel_kb
+from src.keyboards.admin_kb.admin import (
     get_edit_ikb,
-    admin_buttons,
-    start_admin_buttons,
-    user_cb
+    admin_btn,
+    UserCB
 )
-from src.keyboards.basic import cancel_kb
-from src.keyboards.client import start_buttons
 
 admin_router = Router()
 
 
-class NewDate(StatesGroup):
-    date_admin = State()
-
-
-@admin_router.callback_query(user_cb.filter(F.action == "delete_date"))
-async def cb_delete_date(query: CallbackQuery, callback_data: user_cb) -> None:
+@admin_router.callback_query(UserCB.filter(F.action == "delete_date"))
+async def cb_delete_date(query: CallbackQuery, callback_data: UserCB) -> None:
     date_to_delete = callback_data.data_id
     await db.delete_date(date_to_delete)
     await query.answer()
     await query.message.edit_text(f"Дата была удалена.")
 
 
-@admin_router.callback_query(user_cb.filter(F.action == "delete_reg"))
-async def cb_delete_user(query: CallbackQuery, callback_data: user_cb) -> None:
+@admin_router.callback_query(UserCB.filter(F.action == "delete_reg"))
+async def cb_delete_user(query: CallbackQuery, callback_data: UserCB) -> None:
     if query.from_user.id == int(os.getenv('SUDO_ID')):
         date_to_delete = callback_data.data_id
         await db.delete_user(date_to_delete)
@@ -42,7 +37,7 @@ async def cmd_admin(message: types.Message) -> None:
     if message.from_user.id == int(os.getenv('SUDO_ID')):
         await message.answer(
             'Админ-панель открыта',
-            reply_markup=admin_buttons
+            reply_markup=admin_btn()
         )
     else:
         await message.answer('Нет доступа.')
@@ -64,7 +59,7 @@ async def cmd_add_date(message: types.Message, state: FSMContext) -> None:
     if message.text == "Отмена":
         await message.answer(
             "Действие отменено. Возвращаюсь в меню",
-            reply_markup=admin_buttons
+            reply_markup=admin_btn()
         )
         await state.clear()
     else:
@@ -100,17 +95,3 @@ async def cmd_get_all_clients(message: types.Message) -> None:
             await message.answer('На данный момент нету записей')
 
         await show_all_clients(message, clients)
-
-
-@admin_router.message(F.text == "Вернуться")
-async def cmd_get_all_clients(message: types.Message) -> None:
-    if message.from_user.id == int(os.getenv('SUDO_ID')):
-        await message.answer(
-            "Вы вернулись в главное меню",
-            reply_markup=start_admin_buttons
-        )
-    else:
-        await message.answer(
-            'Вы вернулись в главное меню',
-            reply_markup=start_buttons
-        )

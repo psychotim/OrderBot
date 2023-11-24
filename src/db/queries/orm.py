@@ -33,9 +33,7 @@ class AsyncORM:
     @staticmethod
     async def get_admin_date():
         async with async_session_factory() as session:
-
             get_dates = select(Dates).union_all()
-
             res = await session.execute(get_dates)
             res_date = res.all()
             return res_date
@@ -44,7 +42,6 @@ class AsyncORM:
     async def get_all_clients():
         async with async_session_factory() as session:
             get_clients = select(AccountsData).union_all()
-
             res = await session.execute(get_clients)
             res_data = res.all()
             return res_data

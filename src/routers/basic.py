@@ -1,16 +1,16 @@
 import os
 
-from aiogram.filters import CommandStart, Command
 from aiogram import types, Router, F
-from src.keyboards.admin import (
-    start_admin_buttons,
-    admin_buttons,
-    get_dates_ikb
-)
-from src.keyboards.basic import cancel_kb
-from src.keyboards.client import start_buttons, price_buttons
 
-basic_router = Router()
+from src.keyboards.basic_kb import cancel_kb
+from src.keyboards.client_kb.client import start_client_btn, price_btn
+from src.keyboards.admin_kb.admin import (
+    get_dates_ikb,
+    start_admin_btn
+)
+from src.db.queries.orm import AsyncORM as db
+
+basic_router = Router(name='basic')
 
 
 async def show_all_dates(message: types.Message, dates: list) -> None:
@@ -31,22 +31,38 @@ async def show_all_dates(message: types.Message, dates: list) -> None:
             date_str = '\n'.join(date_tuple[1] for date_tuple in dates)
             await message.answer(
                 f'Доступные даты: \n{date_str}',
-                reply_markup=price_buttons
+                reply_markup=price_btn()
             )
 
 
-@basic_router.message(CommandStart())
-async def cmd_start(message: types.Message) -> None:
-    if message.from_user.id == int(os.getenv('SUDO_ID')):
+@basic_router.message(F.text == "Доступные даты")
+async def cmd_show_all_dates(message: types.Message) -> None:
+    dates = await db.get_admin_date()
+    sudo_id = int(os.getenv('SUDO_ID'))
+    if not dates:
         await message.answer(
-            'Привет Босс, вы вошли в Админ-панель!',
-            reply_markup=start_admin_buttons
+            'На данный момент нет доступных дат',
+            reply_markup=cancel_kb()
         )
     else:
-        await message.answer(
-            f'{message.from_user.first_name}, привет!',
-            reply_markup=start_buttons
-        )
+        await show_all_dates(message, dates)
+
+    if message.from_user.id != sudo_id:
+        if not dates:
+            await message.answer(
+                'На данный момент нет доступных дат',
+                reply_markup=cancel_kb()
+            )
+        else:
+            await message.answer(
+                'Уважаемый клиент, если ни одна из предложенных дат вам не подходит,'
+                ' мы предлагаем связаться с мастером и договориться о'
+                ' более удобной для вас дате'
+                ' и времени.\n'
+                f'<i> Спасибо за понимание! </i>',
+                parse_mode='HTML',
+                reply_markup=price_btn()
+            )
 
 
 @basic_router.message(F.text == "Главное меню")
@@ -54,30 +70,28 @@ async def cmd_panel(message: types.Message) -> None:
     if message.from_user.id != int(os.getenv('SUDO_ID')):
         await message.answer(
             'Вы вернулись в главное меню',
-            reply_markup=start_buttons
+            reply_markup=start_client_btn()
         )
 
     elif message.from_user.id == int(os.getenv('SUDO_ID')):
         await message.answer(
             'Вы вернулись в главное меню',
-            reply_markup=admin_buttons
+            reply_markup=start_admin_btn()
         )
 
 
-@basic_router.message(F.text == "Помощь")
-async def cmd_help(message: types.Message) -> None:
-    await message.answer(
-        'Возникли проблемы в работе бота?\n'
-        'Напиши мне в --> @ocbunknown'
-    )
-
-
-@basic_router.message(Command("help"))
-async def cmd_help(message: types.Message) -> None:
-    await message.answer(
-        'Возникли проблемы в работе бота?\n'
-        'Напиши мне в --> @ocbunknown'
-    )
+@basic_router.message(F.text == "Вернуться")
+async def cmd_get_all_clients(message: types.Message) -> None:
+    if message.from_user.id == int(os.getenv('SUDO_ID')):
+        await message.answer(
+            "Вы вернулись в главное меню",
+            reply_markup=start_admin_btn()
+        )
+    else:
+        await message.answer(
+            'Вы вернулись в главное меню',
+            reply_markup=start_client_btn()
+        )
 
 
 @basic_router.message(F.text == "Обо мне")
