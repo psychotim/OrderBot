@@ -17,8 +17,8 @@ class AccountsData(Base):
     service: Mapped[str_256]
     name: Mapped[str_256]
     surname: Mapped[str_256]
-    date_client: Mapped[str_256]
     phone: Mapped[str_256]
+    date_client: Mapped[str_256]
 
 
 class Dates(Base):

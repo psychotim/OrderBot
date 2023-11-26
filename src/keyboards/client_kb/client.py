@@ -60,9 +60,9 @@ def price_btn() -> types.ReplyKeyboardMarkup:
 
 def get_admin_dates_ikb(data):
     dates_ik = InlineKeyboardBuilder()
-    for i in map(lambda x: str(x[1]), data):
+    for i in data:
         dates_ik.row(types.InlineKeyboardButton(
-            text=i,
-            callback_data=ClientCB(data_id=i, action="date_client").pack())
+            text=f"{i[1]}",
+            callback_data=ClientCB(data_id=i[1], action="date_client").pack())
         )
     return dates_ik.as_markup()

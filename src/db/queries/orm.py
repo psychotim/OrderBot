@@ -67,3 +67,10 @@ class AsyncORM:
             del_user = delete(Dates).where(Dates.user_id == int(user_id))
             await session.execute(del_user)
             await session.commit()
+
+    @staticmethod
+    async def delete_date_after_state(data: str):
+        async with async_session_factory() as session:
+            del_user = delete(Dates).where(Dates.date_admin == data)
+            await session.execute(del_user)
+            await session.commit()

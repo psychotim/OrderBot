@@ -13,7 +13,7 @@ from src.keyboards.admin_kb.admin import (
     UserCB
 )
 
-admin_router = Router()
+admin_router = Router(name='admin')
 
 
 @admin_router.callback_query(UserCB.filter(F.action == "delete_date"))
