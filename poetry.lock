@@ -41,6 +41,26 @@ redis = ["redis (>=4.6.0,<4.7.0)"]
 test = ["aresponses (>=2.1.6,<2.2.0)", "pycryptodomex (>=3.18,<4.0)", "pytest (>=7.4.0,<7.5.0)", "pytest-aiohttp (>=1.0.4,<1.1.0)", "pytest-asyncio (>=0.21.0,<0.22.0)", "pytest-cov (>=4.0.0,<4.1.0)", "pytest-html (>=3.2.0,<3.3.0)", "pytest-lazy-fixture (>=0.6.3,<0.7.0)", "pytest-mock (>=3.10.0,<3.11.0)", "pytest-mypy (>=0.10.0,<0.11.0)", "pytz (>=2022.7.1,<2022.8.0)"]
 
 [[package]]
+name = "aiogram-dialog"
+version = "2.0.0"
+description = "Telegram bot UI framework on top of aiogram"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "aiogram_dialog-2.0.0-py3-none-any.whl", hash = "sha256:bd91a59b2353b623b53f53570144b4204f52600fc47faf8e7fca9b08ec3b9459"},
+    {file = "aiogram_dialog-2.0.0.tar.gz", hash = "sha256:ea2611049957fbf6a30fafe13d03dc5ae874c7456ccb3bd5fe745d05c67b0fff"},
+]
+
+[package.dependencies]
+aiogram = ">=3.0.0"
+cachetools = ">=4.0.0,<6.0.0"
+jinja2 = "*"
+magic-filter = "*"
+
+[package.extras]
+tools = ["aiohttp", "diagrams"]
+
+[[package]]
 name = "aiohttp"
 version = "3.8.6"
 description = "Async http client/server framework (asyncio)"
@@ -149,24 +169,6 @@ yarl = ">=1.0,<2.0"
 speedups = ["Brotli", "aiodns", "cchardet"]
 
 [[package]]
-name = "aioredis"
-version = "2.0.1"
-description = "asyncio (PEP 3156) Redis support"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "aioredis-2.0.1-py3-none-any.whl", hash = "sha256:9ac0d0b3b485d293b8ca1987e6de8658d7dafcca1cddfcd1d506cae8cdebfdd6"},
-    {file = "aioredis-2.0.1.tar.gz", hash = "sha256:eaa51aaf993f2d71f54b70527c440437ba65340588afeb786cd87c55c89cd98e"},
-]
-
-[package.dependencies]
-async-timeout = "*"
-typing-extensions = "*"
-
-[package.extras]
-hiredis = ["hiredis (>=1.0)"]
-
-[[package]]
 name = "aiosignal"
 version = "1.3.1"
 description = "aiosignal: a list of registered asynchronous callbacks"
@@ -179,21 +181,6 @@ files = [
 
 [package.dependencies]
 frozenlist = ">=1.1.0"
-
-[[package]]
-name = "aiosqlite"
-version = "0.19.0"
-description = "asyncio bridge to the standard sqlite3 module"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "aiosqlite-0.19.0-py3-none-any.whl", hash = "sha256:edba222e03453e094a3ce605db1b970c4b3376264e56f32e2a4959f948d66a96"},
-    {file = "aiosqlite-0.19.0.tar.gz", hash = "sha256:95ee77b91c8d2808bd08a59fbebf66270e9090c3d92ffbf260dc0db0b979577d"},
-]
-
-[package.extras]
-dev = ["aiounittest (==1.4.1)", "attribution (==1.6.2)", "black (==23.3.0)", "coverage[toml] (==7.2.3)", "flake8 (==5.0.4)", "flake8-bugbear (==23.3.12)", "flit (==3.7.1)", "mypy (==1.2.0)", "ufmt (==2.1.0)", "usort (==1.0.6)"]
-docs = ["sphinx (==6.1.3)", "sphinx-mdinclude (==0.5.3)"]
 
 [[package]]
 name = "alembic"
@@ -327,6 +314,17 @@ dev = ["attrs[docs,tests]", "pre-commit"]
 docs = ["furo", "myst-parser", "sphinx", "sphinx-notfound-page", "sphinxcontrib-towncrier", "towncrier", "zope-interface"]
 tests = ["attrs[tests-no-zope]", "zope-interface"]
 tests-no-zope = ["cloudpickle", "hypothesis", "mypy (>=1.1.1)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "pytest-xdist[psutil]"]
+
+[[package]]
+name = "cachetools"
+version = "5.3.2"
+description = "Extensible memoizing collections and decorators"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "cachetools-5.3.2-py3-none-any.whl", hash = "sha256:861f35a13a451f94e301ce2bec7cac63e881232ccce7ed67fab9b5df4d3beaa1"},
+    {file = "cachetools-5.3.2.tar.gz", hash = "sha256:086ee420196f7b2ab9ca2db2520aca326318b68fe5ba8bc4d49cca91add450f2"},
+]
 
 [[package]]
 name = "certifi"
@@ -658,6 +656,23 @@ files = [
     {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
     {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
 ]
+
+[[package]]
+name = "jinja2"
+version = "3.1.2"
+description = "A very fast and expressive template engine."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "Jinja2-3.1.2-py3-none-any.whl", hash = "sha256:6088930bfe239f0e6710546ab9c19c9ef35e29792895fed6e6e31a023a182a61"},
+    {file = "Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
+]
+
+[package.dependencies]
+MarkupSafe = ">=2.0"
+
+[package.extras]
+i18n = ["Babel (>=2.7)"]
 
 [[package]]
 name = "magic-filter"
@@ -1133,24 +1148,6 @@ socks = ["httpx[socks]"]
 webhooks = ["tornado (>=6.3.3,<6.4.0)"]
 
 [[package]]
-name = "redis"
-version = "5.0.1"
-description = "Python client for Redis database and key-value store"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "redis-5.0.1-py3-none-any.whl", hash = "sha256:ed4802971884ae19d640775ba3b03aa2e7bd5e8fb8dfaed2decce4d0fc48391f"},
-    {file = "redis-5.0.1.tar.gz", hash = "sha256:0dab495cd5753069d3bc650a0dde8a8f9edde16fc5691b689a566eda58100d0f"},
-]
-
-[package.dependencies]
-async-timeout = {version = ">=4.0.2", markers = "python_full_version <= \"3.11.2\""}
-
-[package.extras]
-hiredis = ["hiredis (>=1.0.0)"]
-ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"]
-
-[[package]]
 name = "sniffio"
 version = "1.3.0"
 description = "Sniff out which async library your code is running under"
@@ -1376,4 +1373,4 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "3c837d5ed9f49b9d07a92e81f077e3e4763f79eabde12f8aa7b3690bc40de79d"
+content-hash = "9f445e2380cfd52f4ccf837da0f7019981f59ca0e3b605229426008fc29be9c2"

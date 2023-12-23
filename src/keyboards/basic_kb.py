@@ -8,8 +8,7 @@ def cancel_kb() -> types.ReplyKeyboardMarkup:
 
     cancel_button = types.ReplyKeyboardMarkup(
         resize_keyboard=True,
-        keyboard=btn_list,
-        input_field_placeholder="Выберите действие"
+        keyboard=btn_list
     )
 
     return cancel_button

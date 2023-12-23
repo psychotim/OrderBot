@@ -2,9 +2,9 @@ import os
 
 import aiogram.exceptions
 from aiogram import types, F, Router, Bot
-import telegram.error
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
+import telegram.error
 
 from src.routers.client_logic.fsm.order_states import NewOrder
 from src.keyboards.admin_kb.admin import admin_btn
@@ -17,8 +17,11 @@ from src.keyboards.client_kb.client import (
     start_client_btn,
     ClientCB
 )
-from src.db.queries.orm import AsyncORM as db
-from aiogram.types.reply_keyboard_remove import ReplyKeyboardRemove
+from src.db.queries.orm import (
+    get_admin_date,
+    add_item,
+    delete_date_after_state
+)
 
 client_router = Router(name='client')
 
@@ -41,41 +44,20 @@ async def cmd_panel(message: types.Message, state: FSMContext) -> None:
 
 @client_router.message(F.text == 'Услуги')
 async def cmd_services(message: types.Message) -> None:
-    price = '55 рублей'
-    service = 'Коллагенирование ресниц'
-    text = f'Услуга: {service}\n Цена услуги: <b>{price}</b>'
-    await message.answer(text, parse_mode='HTML')
-
-    price1 = '45 рублей'
-    service1 = 'Ламинирование ресниц'
-    text1 = f'Услуга: {service1}\n Цена услуги: <b>{price1}</b>'
-    await message.answer(text1, parse_mode='HTML')
-
-    price2 = '45 рублей'
-    service2 = 'Коллагенирование бровей'
-    text2 = f'Услуга: {service2}(Коррекция и окрашивание)\n Цена услуги: <b>{price2}</b>'
-    await message.answer(text2, parse_mode='HTML')
-
-    price3 = '20 рублей'
-    service3 = 'Коррекция и окрашивание бровей'
-    text3 = f'Услуга: {service3}\n Цена услуги: <b>{price3}</b>'
-    await message.answer(text3, parse_mode='HTML')
-
-    price4 = '15 рублей'
-    service4 = 'Коррекция бровей'
-    text4 = f'Услуга: {service4}\n Цена услуги: <b>{price4}</b>'
-    await message.answer(text4, parse_mode='HTML')
-
-    price5 = '10 рублей'
-    service5 = 'Окрашивание ресниц'
-    text5 = f'Услуга: {service5}\n Цена услуги: <b>{price5}</b>'
-    await message.answer(text5, parse_mode='HTML')
-
-    price6 = '8 рублей'
-    service6 = 'Ваксинг верхней губы'
-    text6 = f'Услуга: {service6}\n Цена услуги: <b>{price6}</b>'
-
-    await message.answer(text6, parse_mode='HTML', reply_markup=price_btn())
+    msg = (
+        'Услуга: Коллагенирование ресниц\n Цена услуги: <b>55 рублей</b>\n\n'
+        'Услуга: Ламинирование ресниц\n Цена услуги: <b>45 рублей</b>\n\n'
+        'Услуга: Коллагенирование бровей (Коррекция и окрашивание)\n Цена услуги: <b>45 рублей</b>\n\n'
+        'Услуга: Коррекция и окрашивание бровей\n Цена услуги: <b>20 рублей</b>\n\n'
+        'Услуга: Коррекция бровей\n Цена услуги: <b>15 рублей</b>\n\n'
+        'Услуга: Окрашивание ресниц\n Цена услуги: <b>10 рублей</b>\n\n'
+        'Услуга: Ваксинг верхней губы\n Цена услуги: <b>8 рублей</b>\n\n'
+    )
+    await message.answer(
+        msg,
+        parse_mode='HTML',
+        reply_markup=price_btn()
+    )
 
 
 @client_router.message(F.text == "Записаться")
@@ -120,7 +102,7 @@ async def surname_handler(message: types.Message, state: FSMContext) -> None:
 
 @client_router.message(NewOrder.phone)
 async def phone_handler(message: types.Message, state: FSMContext) -> None:
-    date_admin = await db.get_admin_date()
+    date_admin = await get_admin_date()
     await state.update_data(phone=message.text)
     await state.set_state(NewOrder.date_client)
 
@@ -144,11 +126,10 @@ async def date_select_handler(
         state: FSMContext,
         bot: Bot
 ) -> None:
-
     date_client = callback_data.data_id
     await state.update_data(date_client=date_client)
     await query.answer()
-    await db.add_item(state)
+    await add_item(state)
     await state.clear()
 
     # delete inline btn after choice
@@ -158,20 +139,20 @@ async def date_select_handler(
         message_id=query.message.message_id
     )
 
-    # deleting the date from a database after choice
-    await db.delete_date_after_state(date_client)
+    # deleting a date from the database after choice
+    await delete_date_after_state(date_client)
 
-    if query.message.from_user.id != int(os.getenv('SUDO_ID')):
+    if query.message.from_user.id == int(os.getenv('SUDO_ID')):
+        await query.message.answer(
+            'Вы на главном меню',
+            reply_markup=admin_btn()
+        )
+    else:
         await query.message.answer(
             'Вы записаны, как только мастер будет свободен, он с вами свяжется!\n'
             'Возникли вопросы?\n'
             ' Напишите мастеру: @verasok83',
             reply_markup=start_client_btn()
-        )
-    else:
-        await query.message.answer(
-            'Вы на главном меню',
-            reply_markup=admin_btn()
         )
 
     # Notification about new client

@@ -6,26 +6,18 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from dotenv import load_dotenv
 from src.routers import router
 import logging
-from src.db.queries.orm import AsyncORM
-# from aioredis import Redis
-# from aiogram.fsm.storage.redis import RedisStorage
-
-
-# async def main_db():
-#     await AsyncORM.create_tables()
+from src.db.queries.orm import create_tables
 
 
 async def main() -> None:
     logging.basicConfig(level=logging.DEBUG)
     load_dotenv('.env')
-    dp = Dispatcher(storage=MemoryStorage())  # storage=RedisStorage(redis=Redis())
+    dp = Dispatcher(storage=MemoryStorage())
     bot = Bot(token=os.getenv('TOKEN'))
 
     dp.include_routers(router)
-
-    await AsyncORM.create_tables()
+    await create_tables()
     await dp.start_polling(bot)
-    await asyncio.sleep(0)
 
 
 if __name__ == '__main__':

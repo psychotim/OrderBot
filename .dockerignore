@@ -78,3 +78,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 .github
+
+src/routers/client_logic/fsm/pagination_states.py
+src/keyboards/client_kb/pagination_services.py

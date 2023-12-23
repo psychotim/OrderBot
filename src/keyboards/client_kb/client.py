@@ -3,7 +3,7 @@ from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 
-class ClientCB(CallbackData, sep="__", prefix="my"):
+class ClientCB(CallbackData, sep="__", prefix="client"):
     data_id: str
     action: str
 

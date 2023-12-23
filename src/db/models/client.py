@@ -23,26 +23,12 @@ class AccountsData(Base):
 
 class Dates(Base):
     __tablename__ = "dates"
+
     """ Variables
 
     :param user_id: primary key
     :param date_admin: a date that admin wrote
     """
+
     user_id: Mapped[Annotated[int, mapped_column(primary_key=True)]]
     date_admin: Mapped[str_256]
-
-
-""" This table for the future features
-
-class AdminsData(Base):
-    __tablename__ = "admins"
-
-    Variables
-
-    :param id: primary key
-    :param user_id: Telegram user_id
-    
-
-    id: Mapped[Annotated[int, mapped_column(primary_key=True)]]
-    user_id: Mapped[Annotated[int, mapped_column(unique=True)]]
-"""

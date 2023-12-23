@@ -5,7 +5,13 @@ from aiogram.fsm.context import FSMContext
 from src.routers.client_logic.fsm.date_states import NewDate
 from aiogram.types import CallbackQuery
 
-from src.db.queries.orm import AsyncORM as db
+from src.db.queries.orm import (
+    delete_date,
+    delete_user,
+    write_date,
+    get_all_clients
+)
+
 from src.keyboards.basic_kb import cancel_kb
 from src.keyboards.admin_kb.admin import (
     get_edit_ikb,
@@ -19,7 +25,7 @@ admin_router = Router(name='admin')
 @admin_router.callback_query(UserCB.filter(F.action == "delete_date"))
 async def cb_delete_date(query: CallbackQuery, callback_data: UserCB) -> None:
     date_to_delete = callback_data.data_id
-    await db.delete_date(date_to_delete)
+    await delete_date(date_to_delete)
     await query.answer()
     await query.message.edit_text(f"Дата была удалена.")
 
@@ -28,7 +34,7 @@ async def cb_delete_date(query: CallbackQuery, callback_data: UserCB) -> None:
 async def cb_delete_user(query: CallbackQuery, callback_data: UserCB) -> None:
     if query.from_user.id == int(os.getenv('SUDO_ID')):
         date_to_delete = callback_data.data_id
-        await db.delete_user(date_to_delete)
+        await delete_user(date_to_delete)
         await query.message.reply('Запись была удалена')
 
 
@@ -69,7 +75,7 @@ async def cmd_add_date(message: types.Message, state: FSMContext) -> None:
             ' (Для отмены нажмите соответствующую кнопку)',
             reply_markup=cancel_kb()
         )
-        await db.write_date(state)
+        await write_date(state)
         await state.set_state(NewDate.date_admin)
 
 
@@ -90,7 +96,7 @@ async def show_all_clients(message: types.Message, clients: list) -> None:
 @admin_router.message(F.text == "Все записи")
 async def cmd_get_all_clients(message: types.Message) -> None:
     if message.from_user.id == int(os.getenv('SUDO_ID')):
-        clients = await db.get_all_clients()
+        clients = await get_all_clients()
         if not clients:
             await message.answer('На данный момент нету записей')
 
