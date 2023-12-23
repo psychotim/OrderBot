@@ -12,6 +12,9 @@ __pycache__/
 # C extensions
 *.so
 
+src/routers/fsm/pagination_states.py
+src/keyboards/client_kb/pagination_services.py
+
 # Distribution / packaging
 .Python
 build/
@@ -171,7 +174,3 @@ cython_debug/
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/python
-
-# Test db queries
-.db_point.py
