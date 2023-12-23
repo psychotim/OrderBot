@@ -20,8 +20,8 @@ src/
             commands/    start/help commands
             fsm/         states
       basic.py           admin&client stuff
-...
-__main__.py       entry point
+
+    __main__.py       entry point
      
 ```
 
@@ -56,9 +56,9 @@ git clone https://github.com/psychotim/OrderBot.git
 ## Installation
 ```
 pip install -r requirements.txt
-cmd: python __main__.py
+python -m src
 ```
 ## Docker
 ```
-docker-compose up -d
+docker compose up -d
 ```
