@@ -1,13 +1,7 @@
 from sqlalchemy import insert, select, delete
 from aiogram.fsm.context import FSMContext
-from src.db.database import Base, async_engine, async_session_factory
-from src.db.models.client import AccountsData, Dates
-
-
-async def create_tables():
-    async with async_engine.begin() as conn:
-        # await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
+from src.db.database import async_session_factory
+from src.db.models import AccountsData, Dates
 
 
 async def add_item(state: FSMContext):
