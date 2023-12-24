@@ -56,6 +56,7 @@ git clone https://github.com/psychotim/OrderBot.git
 ## Installation
 ```
 pip install -r requirements.txt
+make migrate
 python -m src
 ```
 ## Docker
